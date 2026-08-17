@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bomtable-postgres
+    environment:
+      POSTGRES_DB: bomtable
+      POSTGRES_USER: bomtable
+      POSTGRES_PASSWORD: bomtable
+    ports:
+      - "5433:5432"
+    volumes:
+      - bomtable-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bomtable -d bomtable"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  bomtable-pgdata:
