@@ -14,3 +14,27 @@ export interface BomCostResp {
   bomVersion: string
   totalCost: number
 }
+
+export interface BomVersionReq {
+  bomVersion: string
+  productCode: string
+  description: string
+  isCurrent: boolean
+}
+
+export interface BomStructureReq {
+  bomVersion: string
+  parentCode: string
+  childCode: string
+  quantity: number
+}
+
+export interface BomStructureResp {
+  id: number
+  bomVersion: string
+  parentCode: string
+  parentName: string
+  childCode: string
+  childName: string
+  quantity: number
+}

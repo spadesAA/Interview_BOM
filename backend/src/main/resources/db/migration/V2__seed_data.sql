@@ -1,6 +1,6 @@
 -- 1. 物料主檔（所有下游表都依賴它）
 INSERT INTO material (material_code, material_name, unit, unit_price, is_leaf) VALUES
-('PCB-CONTROL-V2', '控制器主電路板', '塊', NULL, false),
+('PCB-CONTROL', '控制器主電路板', '塊', NULL, false),
 ('POWER-MODULE', '電源模組', '個', NULL, false),
 ('MCU-MODULE', '主控模組', '個', NULL, false),
 ('COMM-MODULE', '通訊模組', '個', NULL, false),
@@ -17,14 +17,14 @@ INSERT INTO material (material_code, material_name, unit, unit_price, is_leaf) V
 
 -- 2. 版本主檔
 INSERT INTO bom_version (bom_version, product_code, description, is_current) VALUES
-('V2', 'PCB-CONTROL-V2', '原始設計版本', true),
-('V3', 'PCB-CONTROL-V2', 'POWER-MODULE 升級版本', false);
+('V2', 'PCB-CONTROL', '原始設計版本', true),
+('V3', 'PCB-CONTROL', 'POWER-MODULE 升級版本', false);
 
 -- 3. BOM結構（依賴 material 已存在）
 INSERT INTO bom_structure (bom_version, parent_code, child_code, quantity) VALUES
-('V2', 'PCB-CONTROL-V2', 'POWER-MODULE', 1),
-('V2', 'PCB-CONTROL-V2', 'MCU-MODULE', 1),
-('V2', 'PCB-CONTROL-V2', 'COMM-MODULE', 2),
+('V2', 'PCB-CONTROL', 'POWER-MODULE', 1),
+('V2', 'PCB-CONTROL', 'MCU-MODULE', 1),
+('V2', 'PCB-CONTROL', 'COMM-MODULE', 2),
 ('V2', 'POWER-MODULE', 'DC-DC-CHIP', 1),
 ('V2', 'POWER-MODULE', 'CAPACITOR-FILTER', 3),
 ('V2', 'MCU-MODULE', 'IC-MCU', 1),
@@ -34,9 +34,9 @@ INSERT INTO bom_structure (bom_version, parent_code, child_code, quantity) VALUE
 ('V2', 'COMM-MODULE', 'CAN-BUS-IC', 1),
 
 -- V3：結構與 V2 相同，僅 POWER-MODULE 底下的 DC-DC-CHIP 換成 DC-DC-CHIP-PRO
-('V3', 'PCB-CONTROL-V2', 'POWER-MODULE', 1),
-('V3', 'PCB-CONTROL-V2', 'MCU-MODULE', 1),
-('V3', 'PCB-CONTROL-V2', 'COMM-MODULE', 2),
+('V3', 'PCB-CONTROL', 'POWER-MODULE', 1),
+('V3', 'PCB-CONTROL', 'MCU-MODULE', 1),
+('V3', 'PCB-CONTROL', 'COMM-MODULE', 2),
 ('V3', 'POWER-MODULE', 'DC-DC-CHIP-PRO', 1),
 ('V3', 'POWER-MODULE', 'CAPACITOR-FILTER', 3),
 ('V3', 'MCU-MODULE', 'IC-MCU', 1),
