@@ -16,6 +16,7 @@ export interface MaterialReq {
 
 export interface MaterialSubstituteReq {
   bomVersion: string
+  productCode: string
   originalMaterialCode: string
   substituteMaterialCode: string
   substituteMaterialName: string
@@ -27,6 +28,7 @@ export interface MaterialSubstituteReq {
 export interface MaterialSubstituteResp {
   id: number
   bomVersion: string
+  productCode: string
   originalMaterialCode: string
   originalMaterialName: string
   substituteMaterialCode: string

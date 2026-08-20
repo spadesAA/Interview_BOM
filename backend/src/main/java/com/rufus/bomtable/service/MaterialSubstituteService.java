@@ -41,13 +41,14 @@ public class MaterialSubstituteService {
 
         // 2. 寫入/更新替代關係，設定 is_active = true
         MaterialSubstitute substitute = materialSubstituteDao
-                .findByVersionAndOriginalCode(reqDTO.getBomVersion(), reqDTO.getOriginalMaterialCode())
+                .findByProductVersionAndOriginalCode(reqDTO.getProductCode(), reqDTO.getBomVersion(), reqDTO.getOriginalMaterialCode())
                 .orElseGet(MaterialSubstitute::new);
 
         LocalDateTime now = LocalDateTime.now();
         boolean isNew = substitute.getCreatedAt() == null;
 
         substitute.setBomVersion(reqDTO.getBomVersion());
+        substitute.setProductCode(reqDTO.getProductCode());
         substitute.setOriginalMaterialCode(reqDTO.getOriginalMaterialCode());
         substitute.setSubstituteMaterialCode(reqDTO.getSubstituteMaterialCode());
         substitute.setSubstituteQuantity(reqDTO.getSubstituteQuantity());

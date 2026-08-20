@@ -22,6 +22,9 @@ public class BomStructure {
     @Column(name = "bom_version")
     private String bomVersion;
 
+    @Column(name = "product_code")
+    private String productCode;
+
     @Column(name = "parent_code")
     private String parentCode;
 

@@ -13,6 +13,9 @@ public class MaterialSubstituteReqDTO {
     @NotBlank(message = "版本不可為空")
     private String bomVersion;
 
+    @NotBlank(message = "產品編碼不可為空")
+    private String productCode;
+
     @NotBlank(message = "原始物料編碼不可為空")
     private String originalMaterialCode;
 

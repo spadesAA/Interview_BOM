@@ -9,6 +9,7 @@ public class BomStructureRespDTO {
 
     private Long id;
     private String bomVersion;
+    private String productCode;
     private String parentCode;
     private String parentName;
     private String childCode;

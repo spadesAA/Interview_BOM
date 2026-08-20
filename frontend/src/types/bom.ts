@@ -24,6 +24,7 @@ export interface BomVersionReq {
 
 export interface BomStructureReq {
   bomVersion: string
+  productCode: string
   parentCode: string
   childCode: string
   quantity: number
@@ -32,6 +33,7 @@ export interface BomStructureReq {
 export interface BomStructureResp {
   id: number
   bomVersion: string
+  productCode: string
   parentCode: string
   parentName: string
   childCode: string

@@ -11,6 +11,9 @@ public class BomStructureReqDTO {
     @NotBlank(message = "版本不可為空")
     private String bomVersion;
 
+    @NotBlank(message = "產品編碼不可為空")
+    private String productCode;
+
     @NotBlank(message = "父物料編碼不可為空")
     private String parentCode;
 

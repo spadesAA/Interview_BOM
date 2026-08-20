@@ -61,7 +61,8 @@ public class BomController {
     }
 
     @GetMapping("/structure")
-    public ResponseEntity<List<BomStructureRespDTO>> getStructureList(@RequestParam String version) {
-        return ResponseEntity.ok(bomService.getStructureList(version));
+    public ResponseEntity<List<BomStructureRespDTO>> getStructureList(
+            @RequestParam String productCode, @RequestParam String version) {
+        return ResponseEntity.ok(bomService.getStructureList(productCode, version));
     }
 }

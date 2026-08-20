@@ -55,10 +55,10 @@ public class BomService {
             throw new MaterialNotFoundException("查無物料：" + productCode);
         }
 
-        Map<String, List<BomStructure>> childrenMap = bomStructureDao.findByVersion(resolvedVersion).stream()
+        Map<String, List<BomStructure>> childrenMap = bomStructureDao.findByProductAndVersion(productCode, resolvedVersion).stream()
                 .collect(Collectors.groupingBy(BomStructure::getParentCode));
 
-        Map<String, MaterialSubstitute> substituteMap = materialSubstituteDao.findActiveByVersion(resolvedVersion).stream()
+        Map<String, MaterialSubstitute> substituteMap = materialSubstituteDao.findActiveByProductAndVersion(productCode, resolvedVersion).stream()
                 .collect(Collectors.toMap(MaterialSubstitute::getOriginalMaterialCode, s -> s));
 
         return buildNode(productCode, 1, BigDecimal.ONE, materialMap, childrenMap, substituteMap);
@@ -86,8 +86,9 @@ public class BomService {
      */
     @Transactional
     public void createVersion(BomVersionReqDTO reqDTO) {
-        if (bomVersionDao.existsByVersion(reqDTO.getBomVersion())) {
-            throw new BomVersionAlreadyExistsException("版本編號已存在：" + reqDTO.getBomVersion());
+        if (bomVersionDao.existsByProductAndVersion(reqDTO.getProductCode(), reqDTO.getBomVersion())) {
+            throw new BomVersionAlreadyExistsException(
+                    "版本編號已存在：" + reqDTO.getProductCode() + " / " + reqDTO.getBomVersion());
         }
 
         if (Boolean.TRUE.equals(reqDTO.getIsCurrent())) {
@@ -112,8 +113,8 @@ public class BomService {
             throw new InvalidBomStructureException("父物料與子物料不可相同：" + reqDTO.getParentCode());
         }
 
-        if (!bomVersionDao.existsByVersion(reqDTO.getBomVersion())) {
-            throw new InvalidBomStructureException("查無版本：" + reqDTO.getBomVersion());
+        if (!bomVersionDao.existsByProductAndVersion(reqDTO.getProductCode(), reqDTO.getBomVersion())) {
+            throw new InvalidBomStructureException("查無版本：" + reqDTO.getProductCode() + " / " + reqDTO.getBomVersion());
         }
 
         Material parent = materialDao.findByCode(reqDTO.getParentCode())
@@ -129,6 +130,7 @@ public class BomService {
         LocalDateTime now = LocalDateTime.now();
         BomStructure structure = new BomStructure();
         structure.setBomVersion(reqDTO.getBomVersion());
+        structure.setProductCode(reqDTO.getProductCode());
         structure.setParentCode(reqDTO.getParentCode());
         structure.setChildCode(reqDTO.getChildCode());
         structure.setQuantity(reqDTO.getQuantity());
@@ -137,8 +139,8 @@ public class BomService {
         bomStructureDao.save(structure);
     }
 
-    public List<BomStructureRespDTO> getStructureList(String bomVersion) {
-        return bomStructureDao.findByVersionWithNames(bomVersion);
+    public List<BomStructureRespDTO> getStructureList(String productCode, String bomVersion) {
+        return bomStructureDao.findByProductAndVersionWithNames(productCode, bomVersion);
     }
 
     private String resolveVersion(String productCode, String version) {

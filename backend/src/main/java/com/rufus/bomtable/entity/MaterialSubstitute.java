@@ -22,6 +22,9 @@ public class MaterialSubstitute {
     @Column(name = "bom_version")
     private String bomVersion;
 
+    @Column(name = "product_code")
+    private String productCode;
+
     @Column(name = "original_material_code")
     private String originalMaterialCode;
 

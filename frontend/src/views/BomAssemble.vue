@@ -25,12 +25,14 @@ const structureFormRef = ref<FormInstance>()
 const structureSubmitting = ref(false)
 const structureForm = reactive<BomStructureReq>({
   bomVersion: '',
+  productCode: '',
   parentCode: '',
   childCode: '',
   quantity: 1,
 })
 const structureRules: FormRules = {
   bomVersion: [{ required: true, message: '版本不可為空', trigger: 'blur' }],
+  productCode: [{ required: true, message: '產品編碼不可為空', trigger: 'blur' }],
   parentCode: [{ required: true, message: '請選擇父物料', trigger: 'change' }],
   childCode: [{ required: true, message: '請選擇子物料', trigger: 'change' }],
   quantity: [
@@ -55,6 +57,7 @@ async function handleCreateVersion() {
       await createBomVersion(versionForm)
       ElMessage.success('版本建立成功')
       structureForm.bomVersion = versionForm.bomVersion
+      structureForm.productCode = versionForm.productCode
       fetchStructureList()
     } finally {
       versionSubmitting.value = false
@@ -63,10 +66,10 @@ async function handleCreateVersion() {
 }
 
 async function fetchStructureList() {
-  if (!structureForm.bomVersion) return
+  if (!structureForm.bomVersion || !structureForm.productCode) return
   listLoading.value = true
   try {
-    structureList.value = await getBomStructureList(structureForm.bomVersion)
+    structureList.value = await getBomStructureList(structureForm.productCode, structureForm.bomVersion)
   } finally {
     listLoading.value = false
   }
@@ -118,6 +121,9 @@ async function handleAddStructure() {
 
       <el-card header="加入結構" style="margin-top: 24px">
         <el-form ref="structureFormRef" :model="structureForm" :rules="structureRules" label-width="90px">
+          <el-form-item label="產品編碼" prop="productCode">
+            <el-input v-model="structureForm.productCode" placeholder="如 PCB-DEMO" @blur="fetchStructureList" />
+          </el-form-item>
           <el-form-item label="版本" prop="bomVersion">
             <el-input v-model="structureForm.bomVersion" placeholder="如 V4" @blur="fetchStructureList" />
           </el-form-item>

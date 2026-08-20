@@ -16,9 +16,12 @@ public class BomStructureDaoImpl implements BomStructureDao {
     private EntityManager entityManager;
 
     @Override
-    public List<BomStructure> findByVersion(String bomVersion) {
+    public List<BomStructure> findByProductAndVersion(String productCode, String bomVersion) {
         return entityManager
-                .createQuery("SELECT b FROM BomStructure b WHERE b.bomVersion = :version", BomStructure.class)
+                .createQuery(
+                        "SELECT b FROM BomStructure b WHERE b.productCode = :productCode AND b.bomVersion = :version",
+                        BomStructure.class)
+                .setParameter("productCode", productCode)
                 .setParameter("version", bomVersion)
                 .getResultList();
     }
@@ -40,18 +43,19 @@ public class BomStructureDaoImpl implements BomStructureDao {
     }
 
     @Override
-    public List<BomStructureRespDTO> findByVersionWithNames(String bomVersion) {
+    public List<BomStructureRespDTO> findByProductAndVersionWithNames(String productCode, String bomVersion) {
         return entityManager
                 .createQuery(
                         "SELECT new com.rufus.bomtable.dto.BomStructureRespDTO(" +
-                                "s.id, s.bomVersion, s.parentCode, pm.materialName, " +
+                                "s.id, s.bomVersion, s.productCode, s.parentCode, pm.materialName, " +
                                 "s.childCode, cm.materialName, s.quantity) " +
                                 "FROM BomStructure s " +
                                 "JOIN Material pm ON s.parentCode = pm.materialCode " +
                                 "JOIN Material cm ON s.childCode = cm.materialCode " +
-                                "WHERE s.bomVersion = :version " +
+                                "WHERE s.productCode = :productCode AND s.bomVersion = :version " +
                                 "ORDER BY s.parentCode, s.childCode",
                         BomStructureRespDTO.class)
+                .setParameter("productCode", productCode)
                 .setParameter("version", bomVersion)
                 .getResultList();
     }

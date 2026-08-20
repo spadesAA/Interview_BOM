@@ -4,9 +4,11 @@ import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getSubstituteList, substituteMaterial, toggleSubstituteStatus } from '@/api/material'
 import { useMaterialStore } from '@/stores/material'
+import { useBomStore } from '@/stores/bom'
 import type { MaterialSubstituteReq, MaterialSubstituteResp } from '@/types/material'
 
 const materialStore = useMaterialStore()
+const bomStore = useBomStore()
 const formRef = ref<FormInstance>()
 const submitting = ref(false)
 
@@ -15,6 +17,7 @@ const listLoading = ref(false)
 
 const form = reactive<MaterialSubstituteReq>({
   bomVersion: '',
+  productCode: '',
   originalMaterialCode: '',
   substituteMaterialCode: '',
   substituteMaterialName: '',
@@ -25,6 +28,7 @@ const form = reactive<MaterialSubstituteReq>({
 
 const rules: FormRules = {
   bomVersion: [{ required: true, message: '版本不可為空', trigger: 'blur' }],
+  productCode: [{ required: true, message: '請選擇產品編碼', trigger: 'change' }],
   originalMaterialCode: [{ required: true, message: '請選擇原始物料', trigger: 'change' }],
   substituteMaterialCode: [{ required: true, message: '替代物料編碼不可為空', trigger: 'blur' }],
   substituteQuantity: [
@@ -39,6 +43,7 @@ const rules: FormRules = {
 
 onMounted(() => {
   materialStore.fetchMaterialList()
+  bomStore.fetchProductCodes()
   fetchSubstituteList()
 })
 
@@ -83,6 +88,11 @@ async function handleToggle(row: MaterialSubstituteResp, isActive: boolean) {
     <el-col :span="10">
       <el-card header="替代料設定">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="110px">
+          <el-form-item label="產品編碼" prop="productCode">
+            <el-select v-model="form.productCode" filterable style="width: 100%">
+              <el-option v-for="code in bomStore.productCodeOptions" :key="code" :label="code" :value="code" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="版本" prop="bomVersion">
             <el-input v-model="form.bomVersion" placeholder="如 V2" />
           </el-form-item>
@@ -119,6 +129,7 @@ async function handleToggle(row: MaterialSubstituteResp, isActive: boolean) {
     </el-col>
     <el-col :span="14">
       <el-table :data="substituteList" v-loading="listLoading">
+        <el-table-column label="產品編碼" prop="productCode" width="110" />
         <el-table-column label="版本" prop="bomVersion" width="80" />
         <el-table-column label="原始物料">
           <template #default="{ row }">{{ row.originalMaterialCode }} {{ row.originalMaterialName }}</template>

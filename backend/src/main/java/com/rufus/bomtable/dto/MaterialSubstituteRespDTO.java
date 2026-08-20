@@ -11,6 +11,7 @@ public class MaterialSubstituteRespDTO {
 
     private Long id;
     private String bomVersion;
+    private String productCode;
     private String originalMaterialCode;
     private String originalMaterialName;
     private String substituteMaterialCode;

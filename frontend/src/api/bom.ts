@@ -31,6 +31,6 @@ export function addBomStructure(data: BomStructureReq) {
   return request.post<never, void>('/bom/structure', data)
 }
 
-export function getBomStructureList(version: string) {
-  return request.get<never, BomStructureResp[]>('/bom/structure', { params: { version } })
+export function getBomStructureList(productCode: string, version: string) {
+  return request.get<never, BomStructureResp[]>('/bom/structure', { params: { productCode, version } })
 }

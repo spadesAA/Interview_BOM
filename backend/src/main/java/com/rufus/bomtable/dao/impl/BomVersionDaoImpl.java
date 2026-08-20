@@ -17,8 +17,9 @@ public class BomVersionDaoImpl implements BomVersionDao {
     private EntityManager entityManager;
 
     @Override
-    public Optional<BomVersion> findByVersion(String bomVersion) {
-        return Optional.ofNullable(entityManager.find(BomVersion.class, bomVersion));
+    public Optional<BomVersion> findByProductAndVersion(String productCode, String bomVersion) {
+        return Optional.ofNullable(
+                entityManager.find(BomVersion.class, new BomVersion.BomVersionId(productCode, bomVersion)));
     }
 
     @Override
@@ -44,8 +45,8 @@ public class BomVersionDaoImpl implements BomVersionDao {
     }
 
     @Override
-    public boolean existsByVersion(String bomVersion) {
-        return entityManager.find(BomVersion.class, bomVersion) != null;
+    public boolean existsByProductAndVersion(String productCode, String bomVersion) {
+        return entityManager.find(BomVersion.class, new BomVersion.BomVersionId(productCode, bomVersion)) != null;
     }
 
     @Override
